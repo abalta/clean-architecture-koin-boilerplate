@@ -6,7 +6,8 @@ import io.reactivex.Single
 import org.buffer.android.boilerplate.cache.db.BufferoosDatabase
 import org.buffer.android.boilerplate.cache.mapper.BufferooEntityMapper
 import org.buffer.android.boilerplate.cache.model.CachedBufferoo
-import org.buffer.android.boilerplate.data.browse.Bufferoo
+import org.buffer.android.boilerplate.data.browse.Request
+import org.buffer.android.boilerplate.data.browse.WeatherResponse
 import org.buffer.android.boilerplate.data.source.BufferooDataStore
 
 /**
@@ -18,6 +19,9 @@ class BufferooCacheImpl constructor(val bufferoosDatabase: BufferoosDatabase,
                                     private val entityMapper: BufferooEntityMapper,
                                     private val preferencesHelper: PreferencesHelper)
     : BufferooDataStore {
+    override fun findCity(q: String): Flowable<WeatherResponse> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private val EXPIRATION_TIME = (60 * 10 * 1000).toLong()
 
@@ -39,11 +43,11 @@ class BufferooCacheImpl constructor(val bufferoosDatabase: BufferoosDatabase,
     }
 
     /**
-     * Save the given list of [Bufferoo] instances to the database.
+     * Save the given list of [City] instances to the database.
      */
-    override fun saveBufferoos(bufferoos: List<Bufferoo>): Completable {
+    override fun saveBufferoos(cities: List<Request>): Completable {
         return Completable.defer {
-            bufferoos.forEach {
+            cities.forEach {
                 bufferoosDatabase.cachedBufferooDao().insertBufferoo(
                         entityMapper.mapToCached(it))
             }
@@ -52,9 +56,9 @@ class BufferooCacheImpl constructor(val bufferoosDatabase: BufferoosDatabase,
     }
 
     /**
-     * Retrieve a list of [Bufferoo] instances from the database.
+     * Retrieve a list of [City] instances from the database.
      */
-    override fun getBufferoos(): Flowable<List<Bufferoo>> {
+    override fun getCities(): Flowable<List<Request>> {
         return Flowable.defer {
             Flowable.just(bufferoosDatabase.cachedBufferooDao().getBufferoos())
         }.map {

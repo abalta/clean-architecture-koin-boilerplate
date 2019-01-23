@@ -4,9 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import io.reactivex.disposables.Disposable
-import org.buffer.android.boilerplate.data.browse.interactor.GetBufferoos
+import org.buffer.android.boilerplate.data.browse.interactor.GetCities
 
-class BrowseBufferoosViewModel(val getBufferoos: GetBufferoos) : ViewModel() {
+class BrowseBufferoosViewModel(val getCities: GetCities) : ViewModel() {
 
     private val bufferoosLiveData: MutableLiveData<BrowseState> = MutableLiveData()
     private var disposable: Disposable? = null
@@ -20,9 +20,9 @@ class BrowseBufferoosViewModel(val getBufferoos: GetBufferoos) : ViewModel() {
         return bufferoosLiveData
     }
 
-    fun fetchBufferoos() {
+    fun findCity(q: String) {
         bufferoosLiveData.postValue(BrowseState.Loading)
-        disposable = getBufferoos.execute()
+        disposable = getCities.execute(q)
                 .subscribe({
                     bufferoosLiveData.postValue(BrowseState.Success(it))
                 }, {

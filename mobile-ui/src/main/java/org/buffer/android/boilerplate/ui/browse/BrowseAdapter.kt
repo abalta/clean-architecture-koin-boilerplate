@@ -6,24 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import org.buffer.android.boilerplate.data.browse.Bufferoo
+import org.buffer.android.boilerplate.data.browse.Request
 import org.buffer.android.boilerplate.ui.R
 
 class BrowseAdapter : RecyclerView.Adapter<BrowseAdapter.ViewHolder>() {
 
-    var bufferoos: List<Bufferoo> = arrayListOf()
+    var mCities: MutableList<Request> = mutableListOf()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val bufferoo = bufferoos[position]
-        holder.nameText.text = bufferoo.name
-        holder.titleText.text = bufferoo.title
-
-        Glide.with(holder.itemView.context)
-                .load(bufferoo.avatar)
-                .apply(RequestOptions.circleCropTransform())
-                .into(holder.avatarImage)
+        val bufferoo = mCities[position]
+        holder.nameText.text = bufferoo.query
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,7 +26,7 @@ class BrowseAdapter : RecyclerView.Adapter<BrowseAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return bufferoos.size
+        return mCities.size
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

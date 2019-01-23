@@ -10,7 +10,6 @@ android {
     defaultConfig {
         minSdkVersion globalConfiguration["androidMinSdkVersion"]
         targetSdkVersion globalConfiguration["androidTargetSdkVersion"]
-        testInstrumentationRunner "org.buffer.android.boilerplate.ui.test.TestRunner"
     }
 
     dexOptions {
@@ -35,12 +34,10 @@ android {
         abortOnError false
         ignoreWarnings true
     }
-
 }
 
 dependencies {
     def mobileUiDependencies = rootProject.ext.mobileUiDependencies
-    def mobileUiTestDependencies = rootProject.ext.mobileUiTestDependencies
 
     implementation project(':data')
     implementation project(':cache')
@@ -62,43 +59,6 @@ dependencies {
     // alternately - if using Java8, use the following instead of compiler
     implementation "android.arch.lifecycle:common-java8:1.1.1"
 
-    compile presentationDependencies.archExtensions
-    compile "android.arch.persistence.room:rxjava2:1.1.1"
-
-    testImplementation mobileUiTestDependencies.kotlinJUnit
-    androidTestImplementation "android.arch.core:core-testing:1.1.1"
-    androidTestImplementation ('org.koin:koin-test:1.0.0-RC-1', {
-        exclude group: 'org.jetbrains.kotlin'
-        exclude group: 'org.mockito'
-    })
-    testImplementation mobileUiTestDependencies.mockito
-
-    // Instrumentation test dependencies
-    androidTestImplementation mobileUiTestDependencies.junit
-    androidTestImplementation (mobileUiTestDependencies.mockito, {
-        exclude group: 'org.jetbrains.kotlin'
-        exclude group: 'org.mockito'
-    })
-    androidTestImplementation mobileUiTestDependencies.mockitoAndroid
-    androidTestImplementation (mobileUiTestDependencies.espressoCore) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation (mobileUiTestDependencies.androidRunner) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation (mobileUiTestDependencies.androidRules) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation (mobileUiTestDependencies.espressoIntents) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
-    androidTestImplementation(mobileUiTestDependencies.espressoContrib) {
-        exclude module: 'appcompat'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-        exclude module: 'support-v13'
-        exclude module: 'support-annotations'
-        exclude module: 'recyclerview-v7'
-        exclude module: 'design'
-    }
+    implementation presentationDependencies.archExtensions
+    implementation "android.arch.persistence.room:rxjava2:1.1.1"
 }

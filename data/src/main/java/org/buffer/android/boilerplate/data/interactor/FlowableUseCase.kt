@@ -21,7 +21,7 @@ abstract class FlowableUseCase<T, in Params> constructor(
     /**
      * Executes the current use case.
      */
-    open fun execute(params: Params? = null): Flowable<T> {
+    open fun execute(params: Params): Flowable<T> {
         return this.buildUseCaseObservable(params)
                 .subscribeOn(Schedulers.from(threadExecutor))
                 .observeOn(postExecutionThread.scheduler)

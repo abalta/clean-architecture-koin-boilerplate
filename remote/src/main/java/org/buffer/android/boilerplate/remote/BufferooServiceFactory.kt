@@ -11,25 +11,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
- * Provide "make" methods to create instances of [BufferooService]
+ * Provide "make" methods to create instances of [CityService]
  * and its related dependencies, such as OkHttpClient, Gson, etc.
  */
 object BufferooServiceFactory {
 
-    fun makeBuffeoorService(isDebug: Boolean): BufferooService {
+    fun makeBuffeoorService(isDebug: Boolean): CityService {
         val okHttpClient = makeOkHttpClient(
                 makeLoggingInterceptor(isDebug))
         return makeBufferooService(okHttpClient, makeGson())
     }
 
-    private fun makeBufferooService(okHttpClient: OkHttpClient, gson: Gson): BufferooService {
+    private fun makeBufferooService(okHttpClient: OkHttpClient, gson: Gson): CityService {
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://joe-birch-dsdb.squarespace.com/s/")
+                .baseUrl("http://api.worldweatheronline.com/")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
-        return retrofit.create(BufferooService::class.java)
+        return retrofit.create(CityService::class.java)
     }
 
     private fun makeOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
@@ -43,7 +43,7 @@ object BufferooServiceFactory {
     private fun makeGson(): Gson {
         return GsonBuilder()
                 .setLenient()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                .setDateFormat("yyyy-MM-dd")
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
     }
@@ -54,6 +54,7 @@ object BufferooServiceFactory {
             HttpLoggingInterceptor.Level.BODY
         else
           HttpLoggingInterceptor.Level.NONE
+        HttpLoggingInterceptor.Level.BODY
         return logging
     }
 

@@ -4,12 +4,11 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
+import android.view.Menu
 import android.view.View
-import kotlinx.android.synthetic.main.activity_browse.progress
-import kotlinx.android.synthetic.main.activity_browse.recycler_browse
-import kotlinx.android.synthetic.main.activity_browse.view_empty
-import kotlinx.android.synthetic.main.activity_browse.view_error
-import org.buffer.android.boilerplate.data.browse.Bufferoo
+import kotlinx.android.synthetic.main.activity_browse.*
+import org.buffer.android.boilerplate.data.browse.WeatherResponse
 import org.buffer.android.boilerplate.ui.R
 import org.buffer.android.boilerplate.ui.widget.empty.EmptyListener
 import org.buffer.android.boilerplate.ui.widget.error.ErrorListener
@@ -18,7 +17,7 @@ import org.koin.android.scope.ext.android.bindScope
 import org.koin.android.scope.ext.android.getCurrentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class BrowseActivity: AppCompatActivity() {
+class MainActivity: AppCompatActivity() {
 
     val browseAdapter: BrowseAdapter by inject()
 
@@ -35,7 +34,7 @@ class BrowseActivity: AppCompatActivity() {
         browseBufferoosViewModel.getBufferoos().observe(this,
                 Observer<BrowseState> {
                     if (it != null) this.handleDataState(it) })
-        browseBufferoosViewModel.fetchBufferoos()
+
     }
 
     private fun setupBrowseRecycler() {
@@ -58,10 +57,10 @@ class BrowseActivity: AppCompatActivity() {
         view_error.visibility = View.GONE
     }
 
-    private fun setupScreenForSuccess(data: List<Bufferoo>?) {
+    private fun setupScreenForSuccess(data: WeatherResponse?) {
         view_error.visibility = View.GONE
         progress.visibility = View.GONE
-        if (data!= null && data.isNotEmpty()) {
+        if (data!= null) {
             updateListView(data)
             recycler_browse.visibility = View.VISIBLE
         } else {
@@ -69,8 +68,8 @@ class BrowseActivity: AppCompatActivity() {
         }
     }
 
-    private fun updateListView(bufferoos: List<Bufferoo>) {
-        browseAdapter.bufferoos = bufferoos
+    private fun updateListView(city: WeatherResponse) {
+        browseAdapter.mCities.addAll(city.data.request)
         browseAdapter.notifyDataSetChanged()
     }
 
@@ -88,14 +87,34 @@ class BrowseActivity: AppCompatActivity() {
 
     private val emptyListener = object : EmptyListener {
         override fun onCheckAgainClicked() {
-            browseBufferoosViewModel.fetchBufferoos()
+            browseBufferoosViewModel.findCity("London")
         }
     }
 
     private val errorListener = object : ErrorListener {
         override fun onTryAgainClicked() {
-            browseBufferoosViewModel.fetchBufferoos()
+            browseBufferoosViewModel.findCity("London")
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        val searchItem = menu?.findItem(R.id.app_bar_search)
+        val searchView: SearchView = searchItem?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(q: String?): Boolean {
+                searchView.clearFocus()
+                browseBufferoosViewModel.findCity(q!!)
+                return false
+            }
+
+            override fun onQueryTextChange(q: String?): Boolean {
+                return true
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 
 }

@@ -5,12 +5,12 @@ import org.buffer.android.boilerplate.cache.BufferooCacheImpl
 import org.buffer.android.boilerplate.cache.PreferencesHelper
 import org.buffer.android.boilerplate.cache.db.BufferoosDatabase
 import org.buffer.android.boilerplate.cache.mapper.BufferooEntityMapper
-import org.buffer.android.boilerplate.data.BufferooDataRepository
-import org.buffer.android.boilerplate.data.browse.interactor.GetBufferoos
+import org.buffer.android.boilerplate.data.CityDataRepository
+import org.buffer.android.boilerplate.data.browse.interactor.GetCities
 import org.buffer.android.boilerplate.data.executor.JobExecutor
 import org.buffer.android.boilerplate.data.executor.PostExecutionThread
 import org.buffer.android.boilerplate.data.executor.ThreadExecutor
-import org.buffer.android.boilerplate.data.repository.BufferooRepository
+import org.buffer.android.boilerplate.data.repository.CityRepository
 import org.buffer.android.boilerplate.data.source.BufferooDataStore
 import org.buffer.android.boilerplate.data.source.BufferooDataStoreFactory
 import org.buffer.android.boilerplate.remote.BufferooRemoteImpl
@@ -44,11 +44,11 @@ val applicationModule = module(override=true) {
     factory { BufferooEntityMapper() }
     factory { BufferooServiceFactory.makeBuffeoorService(BuildConfig.DEBUG) }
 
-    factory<BufferooRepository> { BufferooDataRepository(get()) }
+    factory<CityRepository> { CityDataRepository(get()) }
 }
 
 val browseModule = module("Browse", override = true) {
     factory { BrowseAdapter() }
-    factory { GetBufferoos(get(), get(), get()) }
+    factory { GetCities(get(), get(), get()) }
     viewModel { BrowseBufferoosViewModel(get()) }
 }
