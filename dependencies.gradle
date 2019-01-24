@@ -30,6 +30,7 @@ ext {
     glideVersion = '4.0.0'
     koinVersion = '1.0.0-RC-1'
     glassfishAnnotationVersion = '10.0-b28'
+    constraintLayout = '1.1.2'
 
     //Testing
     robolectricVersion = '3.4.2'
@@ -121,6 +122,7 @@ ext {
             roomRuntime:        "android.arch.persistence.room:runtime:${roomVersion}",
             roomCompiler:       "android.arch.persistence.room:compiler:${roomVersion}",
             roomRxJava:         "android.arch.persistence.room:rxjava2:${roomVersion}",
+            constraintLayout:   "com.android.support.constraint:constraint-layout:${constraintLayout}"
     ]
 
 }
